@@ -1,6 +1,6 @@
-package P2.DAO;
+package P2enP3.DAO;
 
-import P2.Domein.Reiziger;
+import P2enP3.Domein.Reiziger;
 import java.sql.Date;
 import java.util.List;
 

@@ -1,6 +1,7 @@
-package P2.DAO;
+package P2enP3.DAO;
 
-import P2.Domein.Reiziger;
+import P2enP3.Domein.Adres;
+import P2enP3.Domein.Reiziger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -8,10 +9,11 @@ import java.util.List;
 
 public class ReizigerDAOPsql implements ReizigerDAO {
     private Connection conn;
+    private AdresDAO adao;
 
-    public ReizigerDAOPsql(Connection conn) {
+    public ReizigerDAOPsql(Connection conn, AdresDAO adao) {
         this.conn = conn;
-
+        this.adao = adao;
     }
     @Override
     public List<Reiziger> findAll() {
@@ -34,6 +36,8 @@ public class ReizigerDAOPsql implements ReizigerDAO {
                 geboortedatum = rs.getDate("geboortedatum");
                 System.out.println(reizigerId + "." + voorletters + " " + tussenvoegsel + " " + achternaam + " " + geboortedatum);
                 Reiziger reiziger1 = new Reiziger(reizigerId, voorletters , tussenvoegsel , achternaam , geboortedatum);
+                Adres a1 = adao.findByReiziger(reiziger1);
+                reiziger1.setAdres(a1);
                 reizigers.add(reiziger1);
             }
             rs.close();
@@ -66,6 +70,8 @@ public class ReizigerDAOPsql implements ReizigerDAO {
                 geboortedatum = rs.getDate("geboortedatum");
                 System.out.println(reizigerId + "." + voorletters + " " + tussenvoegsel + " " + achternaam + " " + geboortedatum);
                 Reiziger reiziger1 = new Reiziger(reizigerId, voorletters , tussenvoegsel , achternaam , geboortedatum);
+                Adres a1 = adao.findByReiziger(reiziger1);
+                reiziger1.setAdres(a1);
                 reizigers.add(reiziger1);
             }
             rs.close();
@@ -98,6 +104,9 @@ public class ReizigerDAOPsql implements ReizigerDAO {
                     geboortedatum = rs.getDate("geboortedatum");
                     System.out.println(reizigerId + "." + voorletters + " " + tussenvoegsel + " " + achternaam + " " + geboortedatum);
                     Reiziger reiziger1 = new Reiziger(reizigerId, voorletters , tussenvoegsel , achternaam , geboortedatum);
+                    Adres a1 = adao.findByReiziger(reiziger1);
+                    reiziger1.setAdres(a1);
+
                     return reiziger1;
                 }
 
@@ -119,6 +128,8 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             if(i == 1) {
                 return true;
             }
+            Adres adres = reiziger.getAdres();
+            adao.delete(adres);
             statement.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -137,6 +148,8 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             if(i == 1) {
                 return true;
             }
+            Adres adres = reiziger.getAdres();
+            adao.update(adres);
 
             ps.close();
 
@@ -155,6 +168,8 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             ps.setString(4, reiziger.getNaam());
             ps.setDate(5, reiziger.getGeboortedatum());
             int execute = ps.executeUpdate();
+            Adres adres = reiziger.getAdres();
+            adao.save(adres);
 
             if(execute == 1) {
                 return true;
