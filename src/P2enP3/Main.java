@@ -7,7 +7,9 @@ import P2enP3.DAO.ReizigerDAO;
 import P2enP3.DAO.ReizigerDAOPsql;
 import P2enP3.Domein.Adres;
 import P2enP3.Domein.Reiziger;
-
+import P4.DAO.OVChipkaartDAO;
+import P4.DAO.OVChipkaartDAOPsql;
+import P4.Domein.OVChipkaart;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -75,10 +77,38 @@ public class Main {
                 return null;
             }
         };
+        OVChipkaartDAO odaosql = new OVChipkaartDAO() {
+            @Override
+            public boolean save(OVChipkaart ovChipkaart) {
+                return false;
+            }
+
+            @Override
+            public boolean update(OVChipkaart ovChipkaart) {
+                return false;
+            }
+
+            @Override
+            public boolean delete(OVChipkaart ovChipkaart) {
+                return false;
+            }
+
+            @Override
+            public List<OVChipkaart> findByReiziger(Reiziger reiziger) {
+                return null;
+            }
+
+            @Override
+            public List<OVChipkaart> findAll() {
+                return null;
+            }
+        };
         AdresDAOPsql apsql1 = new AdresDAOPsql(getConnection(), rdaosql);
-        ReizigerDAOPsql rdaosql1 = new ReizigerDAOPsql(getConnection(), adaosql);
+        ReizigerDAOPsql rdaosql1 = new ReizigerDAOPsql(getConnection(), adaosql, odaosql);
+        OVChipkaartDAOPsql odaopsql = new OVChipkaartDAOPsql(getConnection(), rdaosql1);
         testReizigerDAO(rdaosql1);
         testAdresDAO(apsql1);
+        testOVchipDAO(odaopsql);
 //        testProductDao(pdaosql1);
         closeConnection();
 
@@ -101,6 +131,35 @@ public class Main {
         connection.close();
     }
 
+    private static void testOVchipDAO(OVChipkaartDAO odao) throws SQLException {
+        System.out.println("\n---------- Test ovchipDAO -------------");
+
+//         Haal alle reizigers op uit de database
+        List<OVChipkaart> ovChipkaarts = odao.findAll();
+        System.out.println("[Test] ReizigerDAO.findAll() geeft de volgende reizigers:");
+        for (OVChipkaart r : ovChipkaarts) {
+            System.out.println(r);
+        }
+        System.out.println();
+
+        String gbdatum = "1981-03-14";
+        Reiziger sietske = new Reiziger(121, "S", "", "Boers", java.sql.Date.valueOf(gbdatum));
+        OVChipkaart ovchip = new OVChipkaart(99, java.sql.Date.valueOf("2022-01-01"), 1, 27.00, sietske);
+        System.out.print("[Test] Eerst " + ovChipkaarts.size() + " ovchip, na ovDAO.save() ");
+        odao.save(ovchip);
+        ovChipkaarts = odao.findAll();
+        System.out.println(ovChipkaarts.size() + " ovchip\n");
+
+        System.out.println("[Test] OVCHIP.findbyReiziger() geeft de volgende reizigers:");
+        List<OVChipkaart> ovChipkaarten = odao.findByReiziger(sietske);
+        for (OVChipkaart r : ovChipkaarten) {
+            System.out.println(r);
+        }
+        System.out.println();
+
+        odao.update(ovchip);
+    }
+
     private static void testReizigerDAO(ReizigerDAO rdao) throws SQLException {
         System.out.println("\n---------- Test ReizigerDAO -------------");
 
@@ -114,7 +173,7 @@ public class Main {
 
         // Maak een nieuwe reiziger aan en persisteer deze in de database
         String gbdatum = "1981-03-14";
-        Reiziger sietske = new Reiziger(117, "S", "", "Boers", java.sql.Date.valueOf(gbdatum));
+        Reiziger sietske = new Reiziger(121, "S", "", "Boers", java.sql.Date.valueOf(gbdatum));
         System.out.print("[Test] Eerst " + reizigers.size() + " reizigers, na ReizigerDAO.save() ");
         rdao.save(sietske);
         reizigers = rdao.findAll();
@@ -135,8 +194,8 @@ public class Main {
         System.out.println();
 
         String gbdatum = "1981-03-14";
-        Reiziger sietske = new Reiziger(110, "S", "", "Boers", java.sql.Date.valueOf(gbdatum));
-        Adres adres2 = new Adres(10, "3405CM", "363", "zuidzijde", "Benschop", sietske);
+        Reiziger sietske = new Reiziger(121, "S", "", "Boers", java.sql.Date.valueOf(gbdatum));
+        Adres adres2 = new Adres(19, "3405CM", "363", "zuidzijde", "Benschop", sietske);
         System.out.print("[Test] Eerst " + adres.size() + " adressen, na AdresDAO.save() ");
         adao.save(adres2);
         adres = adao.findAll();

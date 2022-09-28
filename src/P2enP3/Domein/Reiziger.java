@@ -1,7 +1,12 @@
 package P2enP3.Domein;
 
 
+
+
+import P4.Domein.OVChipkaart;
+
 import java.sql.Date;
+import java.util.List;
 
 public class Reiziger {
     private int id;
@@ -10,6 +15,7 @@ public class Reiziger {
     private String achternaam;
     private Date geboortedatum;
     private Adres adres;
+    private List<OVChipkaart> ovChipkaarten;
 
     public Reiziger(int id, String voorletters, String tussenvoegsel, String achternaam, Date geboortedatum) {
         this.id = id;
@@ -43,6 +49,20 @@ public class Reiziger {
     public Adres getAdres() {
         return adres;
     }
+    public void addOvChipkaart(OVChipkaart ovChipkaart) {
+        ovChipkaarten.add(ovChipkaart);
+    }
+    public void deleteOvChipkaart(OVChipkaart ovChipkaart) {
+        for(OVChipkaart i : ovChipkaarten) {
+            if(i == ovChipkaart) {
+                ovChipkaarten.remove(i);
+            }
+        }
+    }
+
+    public List<OVChipkaart> getOvChipkaarten() {
+        return this.ovChipkaarten;
+    }
 
 
 
@@ -53,6 +73,6 @@ public class Reiziger {
                 ", tussenvoegsel='" + tussenvoegsel + '\'' +
                 ", achternaam='" + achternaam + '\'' +
                 ", geboortedatum=" + geboortedatum +
-                " " + adres;
+                " " + adres + " " + ovChipkaarten ;
     }
 }
