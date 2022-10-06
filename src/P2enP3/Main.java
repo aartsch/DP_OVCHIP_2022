@@ -10,6 +10,10 @@ import P2enP3.Domein.Reiziger;
 import P4.DAO.OVChipkaartDAO;
 import P4.DAO.OVChipkaartDAOPsql;
 import P4.Domein.OVChipkaart;
+import P5.DAO.ProductDAO;
+import P5.DAO.ProductDAOPsql;
+import P5.Domein.Product;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -103,9 +107,37 @@ public class Main {
                 return null;
             }
         };
+        ProductDAO pdao = new ProductDAO() {
+
+            @Override
+            public boolean save(Product product) throws SQLException {
+                return false;
+            }
+
+            @Override
+            public boolean update(Product product) throws SQLException {
+                return false;
+            }
+
+            @Override
+            public boolean delete(Product product) throws SQLException {
+                return false;
+            }
+
+            @Override
+            public List<Product> findByOvchipkaart(OVChipkaart ovChipkaart) {
+                return null;
+            }
+
+            @Override
+            public List<Product> findAll() {
+                return null;
+            }
+        };
         AdresDAOPsql apsql1 = new AdresDAOPsql(getConnection(), rdaosql);
         ReizigerDAOPsql rdaosql1 = new ReizigerDAOPsql(getConnection(), adaosql, odaosql);
-        OVChipkaartDAOPsql odaopsql = new OVChipkaartDAOPsql(getConnection(), rdaosql1);
+        ProductDAOPsql pdaosql1 = new ProductDAOPsql(getConnection());
+        OVChipkaartDAOPsql odaopsql = new OVChipkaartDAOPsql(getConnection(), rdaosql1, pdaosql1);
         testReizigerDAO(rdaosql1);
         testAdresDAO(apsql1);
         testOVchipDAO(odaopsql);
@@ -143,8 +175,8 @@ public class Main {
         System.out.println();
 
         String gbdatum = "1981-03-14";
-        Reiziger sietske = new Reiziger(121, "S", "", "Boers", java.sql.Date.valueOf(gbdatum));
-        OVChipkaart ovchip = new OVChipkaart(99, java.sql.Date.valueOf("2022-01-01"), 1, 27.00, sietske);
+        Reiziger sietske = new Reiziger(122, "S", "", "Boers", java.sql.Date.valueOf(gbdatum));
+        OVChipkaart ovchip = new OVChipkaart(100, java.sql.Date.valueOf("2022-01-01"), 1, 27.00, sietske);
         System.out.print("[Test] Eerst " + ovChipkaarts.size() + " ovchip, na ovDAO.save() ");
         odao.save(ovchip);
         ovChipkaarts = odao.findAll();
@@ -173,7 +205,7 @@ public class Main {
 
         // Maak een nieuwe reiziger aan en persisteer deze in de database
         String gbdatum = "1981-03-14";
-        Reiziger sietske = new Reiziger(121, "S", "", "Boers", java.sql.Date.valueOf(gbdatum));
+        Reiziger sietske = new Reiziger(122, "S", "", "Boers", java.sql.Date.valueOf(gbdatum));
         System.out.print("[Test] Eerst " + reizigers.size() + " reizigers, na ReizigerDAO.save() ");
         rdao.save(sietske);
         reizigers = rdao.findAll();
@@ -194,8 +226,8 @@ public class Main {
         System.out.println();
 
         String gbdatum = "1981-03-14";
-        Reiziger sietske = new Reiziger(121, "S", "", "Boers", java.sql.Date.valueOf(gbdatum));
-        Adres adres2 = new Adres(19, "3405CM", "363", "zuidzijde", "Benschop", sietske);
+        Reiziger sietske = new Reiziger(122, "S", "", "Boers", java.sql.Date.valueOf(gbdatum));
+        Adres adres2 = new Adres(20, "3405CM", "363", "zuidzijde", "Benschop", sietske);
         System.out.print("[Test] Eerst " + adres.size() + " adressen, na AdresDAO.save() ");
         adao.save(adres2);
         adres = adao.findAll();

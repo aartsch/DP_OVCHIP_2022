@@ -77,7 +77,7 @@ public class Adres {
     }
 
     public String toString() {
-        return reiziger + "heeft" + " Adres " + id + " met " +  postcode + " met " +  huisnummer + " in " + straat + " in " +  woonplaats;
+        return " Adres " + id + " met " +  postcode + " met " +  huisnummer + " in " + straat + " in " +  woonplaats;
     }
 
 }

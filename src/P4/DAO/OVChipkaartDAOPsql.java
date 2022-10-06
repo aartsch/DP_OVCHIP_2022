@@ -3,6 +3,8 @@ package P4.DAO;
 import P2enP3.DAO.ReizigerDAO;
 import P2enP3.Domein.Reiziger;
 import P4.Domein.OVChipkaart;
+import P5.DAO.ProductDAO;
+import P5.Domein.Product;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,11 +13,13 @@ import java.util.List;
 public class OVChipkaartDAOPsql implements OVChipkaartDAO {
     private Connection conn;
     private ReizigerDAO rdao;
+    private ProductDAO pdao;
 
 
-    public OVChipkaartDAOPsql(Connection conn, ReizigerDAO rdao) {
+    public OVChipkaartDAOPsql(Connection conn, ReizigerDAO rdao, ProductDAO pdao) {
         this.conn = conn;
         this.rdao = rdao;
+        this.pdao = pdao;
 
     }
 
@@ -101,6 +105,12 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
                 klasse = rs.getInt("klasse");
                 saldo = rs.getDouble("saldo");
                 OVChipkaart ovchip1 = new OVChipkaart(kaartNummer, geldigTot, klasse, saldo, reiziger);
+                List<Product> producten = pdao.findByOvchipkaart(ovchip1);
+                if(producten != null) {
+                    for (Product p : producten) {
+                        ovchip1.addProduct(p);
+                    }
+                }
                 ovChipkaarten.add(ovchip1);
             }
             rs.close();
@@ -132,6 +142,12 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
                 reizigerId = rs.getInt("reiziger_id");
                 Reiziger reiziger = rdao.findById(reizigerId);
                 OVChipkaart ovchip1 = new OVChipkaart(kaartNummer, geldigTot, klasse, saldo, reiziger );
+                List<Product> producten = pdao.findByOvchipkaart(ovchip1);
+                if(producten != null) {
+                    for (Product p : producten) {
+                        ovchip1.addProduct(p);
+                    }
+                }
                 ovChipkaarten.add(ovchip1);
             }
 

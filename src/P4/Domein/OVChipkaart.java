@@ -1,7 +1,10 @@
 package P4.Domein;
 
 import P2enP3.Domein.Reiziger;
+import P5.Domein.Product;
+
 import java.sql.Date;
+import java.util.List;
 
 public class OVChipkaart {
     private Reiziger reiziger;
@@ -9,6 +12,7 @@ public class OVChipkaart {
     private Date geldigTot;
     private int klasse;
     private double saldo;
+    private List<Product> producten;
 
     public OVChipkaart(int kaartNummer, Date geldigTot, int klasse, double saldo, Reiziger reiziger) {
         this.kaartNummer = kaartNummer;
@@ -65,6 +69,16 @@ public class OVChipkaart {
     public void setReiziger(Reiziger reiziger) {
         this.reiziger = reiziger;
     }
+
+    public List<Product> getProducten() {
+        return producten;
+    }
+
+    public void addProduct(Product product) {
+        producten.add(product);
+        product.addOvChipkaart(this.kaartNummer);
+    }
+
 
     @Override
     public String toString() {

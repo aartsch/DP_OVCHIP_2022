@@ -199,7 +199,9 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             ps.setDate(5, reiziger.getGeboortedatum());
             int execute = ps.executeUpdate();
             Adres adres = reiziger.getAdres();
-            adao.save(adres);
+            if(adres != null) {
+                adao.save(adres);
+            }
             List<OVChipkaart> ovChipkaarten = reiziger.getOvChipkaarten();
             if(ovChipkaarten != null) {
                 for (OVChipkaart ovChipkaart : ovChipkaarten) {
